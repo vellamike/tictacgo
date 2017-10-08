@@ -5,19 +5,18 @@ import "bufio"
 import "strconv"
 import "os"
 
-func printBoard(board string){
+func printBoard(board string) {
 	fmt.Println("=========")
-	fmt.Println("||", board[0:3], "||")	
-	fmt.Println("||", board[3:6], "||")	
-	fmt.Println("||", board[6:9], "||")	
+	fmt.Println("||", board[0:3], "||")
+	fmt.Println("||", board[3:6], "||")
+	fmt.Println("||", board[6:9], "||")
 	fmt.Println("=========")
 }
 
-
-func winner(board string, player int) bool{
+func winner(board string, player int) bool {
 	var newMarker byte
 
-	if (player == 1){
+	if player == 1 {
 		newMarker = 'X'
 	} else {
 		newMarker = 'O'
@@ -36,11 +35,11 @@ func winner(board string, player int) bool{
 
 }
 
-func moveValid(board, move string) bool{
+func moveValid(board, move string) bool {
 	mv, err := strconv.Atoi(move)
 	mv -= 1
 
-	if (len(board) <= mv) || mv < 0{
+	if (len(board) <= mv) || mv < 0 {
 		return false
 	}
 
@@ -48,32 +47,32 @@ func moveValid(board, move string) bool{
 
 	if (currentValue == 'X') || (currentValue == 'O') || err != nil {
 		return false
-	}else{
+	} else {
 		return true
 	}
 }
 
-func updateBoard(board, move string, activePlayer int) string{
+func updateBoard(board, move string, activePlayer int) string {
 	mv, _ := strconv.Atoi(move)
 	mv -= 1
 
 	out := []rune(board)
 
 	var newMarker rune
-	
-	if (activePlayer == 1){
+
+	if activePlayer == 1 {
 		newMarker = 'X'
 	} else {
 		newMarker = 'O'
 	}
 
-	out[mv] = newMarker;
+	out[mv] = newMarker
 	return string(out)
 }
 
-func isDraw(board string) bool{
-	for _, j := range board{
-		if ((j != 'X') && (j != 'O')) {
+func isDraw(board string) bool {
+	for _, j := range board {
+		if (j != 'X') && (j != 'O') {
 			return false
 		}
 	}
@@ -85,7 +84,7 @@ func main() {
 	activePlayer := 1
 
 	// main loop
-	for true{
+	for true {
 		printBoard(board)
 		fmt.Printf("Next player: Player %d\n", activePlayer)
 		reader := bufio.NewReader(os.Stdin)
@@ -93,25 +92,24 @@ func main() {
 		move, _ := reader.ReadString('\n')
 		move = move[:len(move)-1]
 
-		if moveValid(board, move){
+		if moveValid(board, move) {
 			board = updateBoard(board, move, activePlayer)
 
-			if (winner(board, activePlayer)){
+			if winner(board, activePlayer) {
 				printBoard(board)
 				fmt.Printf("We have a winner!! Congratulations Player %d\n", activePlayer)
 				os.Exit(0)
 			}
-			if (isDraw(board)){
+			if isDraw(board) {
 				fmt.Println("We have a draw!!")
 				os.Exit(0)
 			}
 
-		activePlayer = activePlayer % 2 + 1
+			activePlayer = activePlayer%2 + 1
 
-		}else{
+		} else {
 			fmt.Println("Invalid move, please try again")
 		}
-
 
 	}
 
